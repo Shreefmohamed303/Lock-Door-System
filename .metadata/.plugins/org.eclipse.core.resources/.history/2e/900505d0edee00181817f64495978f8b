@@ -1,0 +1,53 @@
+/*
+ * MC2.c
+ *
+ *  Created on: Nov 20, 2018
+ *      Author: Ayman
+ */
+
+
+#include "eeprom.h"
+#include "usart.h"
+#include "lcd.h"
+
+#define DEFAULT_VALUE 0x41
+#define DEFAULT_ADDRESS 0x0310
+#define MC2_IS_READY 0x01
+
+void main(void)
+{
+	LCD_init();
+	EEPROM_writeByte(DEFAULT_ADDRESS,DEFAULT_VALUE);
+	_delay_ms(50) ;
+
+	uint8 Value_of_mem=7 ;
+	uint8 check=EEPROM_readByte(DEFAULT_ADDRESS , &Value_of_mem) ;
+	LCD_integerToString(check);
+	_delay_ms(50);
+LCD_displayString("Password is") ;
+LCD_goToRowColumn(1,0) ;
+LCD_displayCharacter(Value_of_mem);
+	LCD_integerToString(Value_of_mem) ;
+
+//
+
+
+
+	while(1)
+	{
+
+
+
+	}
+
+
+}
+
+
+
+
+void Arom(void)
+{
+
+
+}

@@ -1,0 +1,50 @@
+/*
+ * MC2.c
+ *
+ *  Created on: Nov 20, 2018
+ *      Author: Ayman
+ */
+
+
+#include "eeprom.h"
+#include "usart.h"
+#include "lcd.h"
+
+#define DEFAULT_VALUE 0x41
+#define DEFAULT_ADDRESS 0x0310
+#define MC_IS_READY 0x01
+
+void main(void)
+{
+	//configuration for the USART
+	USART_configType config = {ASYNCHRONOUS, BIT_8 , DISABLED , BIT_1 , DOUBLE_SPEED_MODE};
+	USART_init(&config);
+	EEPROM_writeByte(DEFAULT_ADDRESS,DEFAULT_VALUE);
+	_delay_ms(100) ;
+
+	uint8 Value_of_mem=7 ;
+	uint8 check=EEPROM_readByte(DEFAULT_ADDRESS , &Value_of_mem) ;
+
+
+
+
+
+
+	while(1)
+	{
+
+
+
+	}
+
+
+}
+
+
+
+
+void Arom(void)
+{
+
+
+}

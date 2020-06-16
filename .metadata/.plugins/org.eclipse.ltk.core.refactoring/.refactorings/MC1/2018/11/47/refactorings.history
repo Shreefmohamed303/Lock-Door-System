@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;MC1/common_macos.h&apos; to &apos;common_macros.h&apos;" description="Rename resource &apos;common_macos.h&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="common_macos.h" name="common_macros.h" stamp="1542917315083" updateReferences="true"/>
+</session>

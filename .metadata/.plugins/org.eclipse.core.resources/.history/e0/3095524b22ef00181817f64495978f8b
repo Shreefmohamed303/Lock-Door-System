@@ -1,0 +1,96 @@
+/*
+ * MC2.c
+ *
+ *  Created on: Nov 20, 2018
+ *      Author: Ayman
+ */
+
+
+#include "eeprom.h"
+#include "usart.h"
+#include "lcd.h"
+
+#define DEFAULT_VALUE 0x41
+#define MC_IS_READY 0x01
+#define NO_OF_PINS 4
+
+void eeprom_allocation(void);
+
+
+uint16 DEFAULT_ADDRESS = 0x0310;
+uint8 password[NO_OF_PINS];
+
+void main(void)
+{
+
+	//configuration for the USART
+	USART_configType config = {ASYNCHRONOUS, BIT_8 , DISABLED , BIT_1 , DOUBLE_SPEED_MODE};
+	USART_init(&config);
+	EEPROM_writeByte(DEFAULT_ADDRESS,DEFAULT_VALUE);
+	_delay_ms(100) ;
+
+	uint8 Value_of_mem=7 ;
+	EEPROM_readByte(DEFAULT_ADDRESS , &Value_of_mem) ;
+
+	USART_sendByte(MC_IS_READY);
+	USART_sendByte(Value_of_mem);
+
+	USART_sendByte(MC_IS_READY);
+	eeprom_allocation();
+
+	EEPROM_readByte(DEFAULT_ADDRESS , &Value_of_mem) ;
+/*	while(USART_recieveByte()!=MC_IS_READY){}*/
+	USART_sendByte(MC_IS_READY);
+	USART_sendByte(Value_of_mem);
+
+
+
+	while(1)
+	{
+
+
+
+	}
+
+
+}
+
+
+
+
+void eeprom_allocation(void)
+{
+	uint8 counter;
+	for(counter=0;counter<6;counter++)
+	{
+		password[counter]=USART_recieveByte();
+	}
+
+	for(counter=0;counter<6;counter++)
+	{
+		EEPROM_writeByte(DEFAULT_ADDRESS,password[counter]);
+		_delay_ms(100) ;
+		DEFAULT_ADDRESS++ ;
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

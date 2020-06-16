@@ -1,0 +1,141 @@
+/********************************************************************************
+ * Module : KEYPAD
+ *
+ * File Name : keypad.c
+ *
+ * Description : Source File for The Keypad Driver
+ *
+ * Author : Shreef Mohamed
+ *
+ * Created on: Sep 16, 2018
+ *
+ ********************************************************************************/
+
+
+#include "keypad.h"
+
+
+/*********************************************************************************
+ *                       FUNCTIONS Prototypes (Private)                          *
+ *********************************************************************************/
+
+#if (N_col==3)
+/*
+ * Function Responsibole for mapping switch number in keypad 4x3
+ * it depends on the keypad form (here we used the form which is used in protues)
+ */
+static uint8 keypad_4x3_AdjustKeyNumber(uint8 button_number) ;
+
+#elif (N_Col==4)
+/*
+ * Function Responsibole for mapping switch number in keypad 4x4
+ * it depends on the keypad form (here we used the form which is used in protues)
+ */
+static uint8 keypad_4x4_AdjustKeyNumber (uint8 Button_number);
+
+#endif
+
+/*********************************************************************************
+ *                       FUNCTIONS Definations                                   *
+ *********************************************************************************/
+unsigned char Keypad_getPressedKey (void)
+{
+	unsigned char col , row ;
+	while (1)
+	{
+		for (col=0 ; col<N_col ; col++ )
+		{
+			/*
+			 * Each time only one of the column pin will be output
+			 * The Rest of pins will be input pins
+			 * The Rows will be Input pins (1st 4 pins)
+			 */
+			KEYPAD_PORT_DIR = (0b00010000<<col);
+			/*
+			 * Each time only one column (the o/p column)  will be cleared
+			 * So Put zero at the output column pin to close the circuit
+			 * activate pull up Resistor for the Rows pins (1st 4 pins)
+			 */
+			KEYPAD_PORT_OUT = (~(0b00010000<<col));
+			for (row=0 ; row<N_row ; row ++)
+			{
+				/*
+				 * Check if switch is pressed in this row
+				 * As we use a pull up Resistor
+				 * so we check with zero (BIT_IS_CLEAR)
+				 */
+				if(BIT_IS_CLEAR(KEYPAD_PORT_IN,row))
+				{
+                    #if (N_col ==3)
+					   return keypad_4x3_AdjustKeyNumber((row*N_col)+col+1);
+                    #elif (N_col ==4)
+					   return keypad_4x4_AdjustKeyNumber((row*N_col)+col+1);
+                    #endif
+
+				}
+			}
+
+		}
+	}
+}
+
+#if (N_col ==3)
+
+   static uint8 keypad_4x3_AdjustKeyNumber(uint8 button_number)
+   {
+	   switch (button_number)
+	   {
+	       case 10 : return '*' ;
+	                 break ;
+	       case 11 : return  0  ;
+	       	         break ;
+	       case 12 : return '#' ;
+	       	          break ;
+	       default : return button_number ;
+	   }
+   }
+
+
+#elif (N_col == 4)
+
+  static uint8 keypad_4x4_AdjustKeyNumber (uint8 Button_number)
+   {
+	   switch (button_number)
+	   {
+	        case 1 : return 7 ;
+	                 break ;
+	        case 2 : return 8 ;
+	       	         break ;
+	        case 3 : return 9 ;
+	       	         break ;
+	        case 4 : return '%' ;
+	                 break ;
+	        case 5 : return 4 ;
+	       	         break ;
+	        case 6 : return 5 ;
+	       	         break ;
+	        case 7 : return 6 ;
+	                 break ;
+	        case 8 : return '*' ;
+	       	         break ;
+	        case 9 : return 1 ;
+	       	         break ;
+	        case 10 : return 2 ;
+	                 break ;
+	        case 11 : return 3 ;
+	       	         break ;
+	        case 12 : return'-' ;
+	       	         break ;
+	        case 13 : return 13 ;  /* ASCII OF ENTER */
+	                 break ;
+	        case 14 : return 0 ;
+	       	         break ;
+	        case 15 : return '=' ;
+	       	         break ;
+	        case 16 : return '+' ;
+	                 break ;
+	        default : return button_number ;
+	   }
+   }
+
+#endif
